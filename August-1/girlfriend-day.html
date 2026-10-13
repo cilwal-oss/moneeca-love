@@ -305,28 +305,12 @@
 
   ::selection{ background:var(--gold); color:var(--navy); }
 
-  /* ---------- MUSIC TOGGLE ---------- */
-  .music-toggle{
-    position:fixed; top:1.4rem; right:1.4rem; z-index:60;
-    width:44px; height:44px; border-radius:50%;
-    background:rgba(31,38,87,0.6); border:1px solid var(--line);
-    color:var(--gold); font-size:1.05rem; cursor:pointer;
-    display:flex; align-items:center; justify-content:center;
-    backdrop-filter:blur(4px);
-    transition:border-color 0.25s, transform 0.25s;
-  }
-  .music-toggle:hover{ border-color:var(--gold); transform:scale(1.08); }
-  .music-toggle.playing{ animation:notePulse 1.6s ease-in-out infinite; }
-  @keyframes notePulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.5; } }
 </style>
 </head>
 <body>
 
 <canvas id="starfield"></canvas>
 <div class="heart-field" id="heartField"></div>
-
-<audio id="bgm" src="audio/wave%20to%20earth%20-%20seasons.mp3" loop preload="auto"></audio>
-<button class="music-toggle" id="musicToggle" aria-label="Toggle background music" title="Seasons — wave to earth">&#9835;</button>
 
 <!-- ================= HERO ================= -->
 <section class="hero">
@@ -586,33 +570,6 @@ document.getElementById('revealBtn').addEventListener('click', (e)=>{
   document.getElementById('revealMsg').classList.add('show');
   spawnHeartBurst(e.clientX, e.clientY);
 });
-
-// background music (Seasons — wave to earth)
-const bgm = document.getElementById('bgm');
-const musicToggle = document.getElementById('musicToggle');
-let musicStarted = false;
-
-function playMusic(){
-  bgm.volume = 0.45;
-  bgm.play().then(()=>{
-    musicStarted = true;
-    musicToggle.classList.add('playing');
-  }).catch(()=>{ /* blocked until a user gesture arrives */ });
-}
-
-musicToggle.addEventListener('click', ()=>{
-  if(bgm.paused){ playMusic(); }
-  else{ bgm.pause(); musicToggle.classList.remove('playing'); musicStarted = false; }
-});
-
-function tryAutoplayOnFirstInteraction(){
-  if(!musicStarted) playMusic();
-  window.removeEventListener('click', tryAutoplayOnFirstInteraction);
-  window.removeEventListener('touchstart', tryAutoplayOnFirstInteraction);
-}
-window.addEventListener('click', tryAutoplayOnFirstInteraction);
-window.addEventListener('touchstart', tryAutoplayOnFirstInteraction);
-playMusic();
 
 // hero parallax tilt
 const heroEl = document.querySelector('.hero');
